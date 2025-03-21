@@ -80,7 +80,7 @@ public type ChatOptions record {
 
 public type Message record {
     # The role of the message sender.
-    "system"|"user"|"assistant" role;
+    "system"|"user"|"assistant"|"tool" role;
     # The text content of the message.
     string content;
     # List of base64-encoded images (for multimodal models like `llava`).
