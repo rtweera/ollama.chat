@@ -17,7 +17,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/constraint;
 import ballerina/http;
 
 # Additional model parameters for chat completion.
@@ -101,7 +100,6 @@ public type ChatRequest record {
     # The model name in `model:tag` format (e.g., `llama3:70b`). Tag defaults to `latest` if omitted.
     string model;
     # List of messages in the chat history, including roles and content.
-    @constraint:Array {minLength: 1}
     Message[] messages;
     # If set to `"json"`, the response content will be formatted as a JSON string.
     "json" format?;
