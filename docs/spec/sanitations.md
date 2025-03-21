@@ -55,6 +55,45 @@ These changes are done in order to improve the overall usability, and as workaro
 
    - **Reason**: Ollama API have an option to load the model by setting the `messages` object to an empty array. To add this functionality to the client, API spec was updated to acccept empty arrays.
 
+6. Add `tools` property to ChatRequest schema
+
+   - **Original**: The original OpenAPI spec did not include `tools` property in the `ChatRequest` object.
+
+   - **Updated**: Added `tools` property to the `ChatRequest` object.
+
+   ```yaml
+   tools:
+     type: array
+     items:
+       $ref: '#/components/schemas/Tool'
+     description: List of tools (e.g., functions) available for the model to use, if supported.
+     minItems: 0
+   ```
+
+   - **Reason**: Tool calling is supported by Ollama (for supported models), but it was missing from the OpenAPI spec. This change allows the client to specify available tools for the model to use.
+
+7. Add new schemas for tool calling
+
+   - **Original**: The original OpenAPI spec did not include schemas for tool calling.
+
+   - **Updated**: Added `Tool` and `ToolCall` schemas to support tool calling functionality.
+
+   - **Reason**: These schemas are required to properly implement tool calling, allowing models to invoke predefined functions and to properly handle tool call responses.
+
+8. Add `tool_calls` property to Message schema
+
+   - **Original**: The original OpenAPI spec did not include `tool_calls` property in the `Message` object.
+
+   - **Updated**: Added `tool_calls` property to the `Message` object.
+
+   ```yaml
+   tool_calls:
+     type: array
+     items:
+       $ref: '#/components/schemas/ToolCall'
+     description: List of tool calls requested by the assistant (present when the model invokes tools).
+   ```
+
 <!-- 4. Add `done_reason` to `GenerateStreamResponse` object
 
    - **Original**: The original OpenAPI spec did not include `done_reason` in the `GenerateStreamResponse` object.

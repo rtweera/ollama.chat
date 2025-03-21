@@ -160,6 +160,20 @@ paths:
                     prompt_eval_duration: 439038000
                     eval_count: 180
                     eval_duration: 4196918000
+                withTools:
+                  summary: Non-streaming response with tool calls
+                  value:
+                    model: "llama3.2"
+                    created_at: "2024-07-22T20:33:28.123648Z"
+                    message:
+                      role: "assistant"
+                      content: ""
+                      tool_calls:
+                        - function:
+                            name: "get_current_weather"
+                            arguments:
+                              format: "celsius"
+                              location: "Paris, FR"
         '400':
           description: Bad Request. Returned when the request is malformed or invalid (e.g., missing required fields).
           content:
@@ -202,6 +216,28 @@ components:
             $ref: '#/components/schemas/Message'
           description: List of messages in the chat history, including roles and content.
           minItems: 0
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tool'
+          description: List of tools (e.g., functions) available for the model to use, if supported.
+          minItems: 0
+          # example:
+          #   - type: "function"
+          #     function:
+          #       name: "get_current_weather"
+          #       description: "Get the current weather for a location"
+          #       parameters:
+          #         type: "object"
+          #         properties:
+          #           location:
+          #             type: "string"
+          #             description: "The location to get the weather for, e.g. San Francisco, CA"
+          #           format:
+          #             type: "string"
+          #             description: "The format to return the weather in, e.g. 'celsius' or 'fahrenheit'"
+          #             enum: ["celsius", "fahrenheit"]
+          #         required: ["location", "format"]
         format:
           type: string
           enum: ["json"]
@@ -240,6 +276,68 @@ components:
             type: string
             format: byte
           description: List of base64-encoded images (for multimodal models like `llava`).
+        tool_calls:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToolCall'
+          description: List of tool calls requested by the assistant (present when the model invokes tools).
+    Tool:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum: ["function"]
+          description: The type of tool (currently only 'function' is supported).
+          example: "function"
+        function:
+          type: object
+          required:
+            - name
+            - parameters
+          properties:
+            name:
+              type: string
+              description: The name of the function.
+              example: "get_current_weather"
+            description:
+              type: string
+              description: A description of what the function does.
+              example: "Get the current weather for a location"
+            parameters:
+              type: object
+              description: The JSON schema defining the parameters the function accepts.
+              example:
+                type: "object"
+                properties:
+                  location:
+                    type: "string"
+                    description: "The location to get the weather for, e.g. San Francisco, CA"
+                  format:
+                    type: "string"
+                    description: "The format to return the weather in, e.g. 'celsius' or 'fahrenheit'"
+                    enum: ["celsius", "fahrenheit"]
+                required: ["location", "format"]
+    ToolCall:
+      type: object
+      properties:
+        function:
+          type: object
+          required:
+            - name
+            - arguments
+          properties:
+            name:
+              type: string
+              description: The name of the function to call.
+              example: "get_current_weather"
+            arguments:
+              type: object
+              description: The arguments to pass to the function.
+              example:
+                format: "celsius"
+                location: "Paris, FR"
     ChatOptions:
       type: object
       description: Additional model parameters for chat completion.
