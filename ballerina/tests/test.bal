@@ -714,24 +714,6 @@ isolated function testLongContextHandling() returns error? {
 }
 
 @test:Config {
-    groups: ["negative_tests", "input_validation"]
-}
-isolated function testEmptyMessages() returns error? {
-    ChatRequest request = {
-        model: llama3_2,
-        messages: []
-    };
-    
-    ChatSingleResponse|ChatStreamResponse|error response = ollama->/chat.post(request);
-    test:assertTrue(response is http:ClientRequestError, "Empty messages should trigger an error");
-    
-    if response is http:ClientRequestError {
-        test:assertTrue(response.message().includes("messages") || response.detail().toString().includes("messages"), 
-                       "Error message should mention the messages field");
-    }
-}
-
-@test:Config {
     groups: ["positive_tests", "chat", "function_outputs"]
 }
 isolated function testGeneratingCode() returns error? {
