@@ -77,6 +77,19 @@ public type ChatOptions record {
     int num_thread?;
 };
 
+public type Tool_function record {
+    # The name of the function.
+    string name;
+    # A description of what the function does.
+    string description?;
+    # The JSON schema defining the parameters the function accepts.
+    record {} parameters;
+};
+
+public type ToolCall record {
+    ToolCall_function 'function?;
+};
+
 public type Message record {
     # The role of the message sender.
     "system"|"user"|"assistant"|"tool" role;
@@ -84,6 +97,8 @@ public type Message record {
     string content;
     # List of base64-encoded images (for multimodal models like `llava`).
     string[] images?;
+    # List of tool calls requested by the assistant (present when the model invokes tools).
+    ToolCall[] tool_calls?;
 };
 
 # Provides settings related to HTTP/1.x protocol.
@@ -96,11 +111,20 @@ public type ClientHttp1Settings record {|
     ProxyConfig proxy?;
 |};
 
+public type ToolCall_function record {
+    # The name of the function to call.
+    string name;
+    # The arguments to pass to the function.
+    record {} arguments;
+};
+
 public type ChatRequest record {
     # The model name in `model:tag` format (e.g., `llama3:70b`). Tag defaults to `latest` if omitted.
     string model;
     # List of messages in the chat history, including roles and content.
     Message[] messages;
+    # List of tools (e.g., functions) available for the model to use, if supported.
+    Tool[] tools?;
     # If set to `"json"`, the response content will be formatted as a JSON string.
     "json" format?;
     ChatOptions options?;
@@ -210,3 +234,9 @@ public type ConnectionConfig record {|
     # and absent fields are handled as `nilable` types. Enabled by default.
     boolean laxDataBinding = true;
 |};
+
+public type Tool record {
+    # The type of tool (currently only 'function' is supported).
+    "function" 'type;
+    Tool_function 'function?;
+};
