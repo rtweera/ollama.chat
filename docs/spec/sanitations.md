@@ -37,6 +37,16 @@ These changes are done in order to improve the overall usability, and as workaro
 
    - **Reason**: Original `date-time` format is not supported in Ballerina.
 
+4. Add `tool` role to the enums of `Message` object
+
+   - **Original**: The original OpenAPI spec did not include `tool` role in the `Message` object.
+   `enum: ["system", "user", "assistant"]`
+
+   - **Updated**: Added `tool` role to the `Message` object.
+   `enum: ["system", "user", "assistant", "tool"]`
+
+   - **Reason**: The `tool` role supported by Ollama (for supported models only), but it was missing from the OpenAPI spec. This change ensures that the generated client can handle this role correctly.
+
 <!-- 4. Add `done_reason` to `GenerateStreamResponse` object
 
    - **Original**: The original OpenAPI spec did not include `done_reason` in the `GenerateStreamResponse` object.

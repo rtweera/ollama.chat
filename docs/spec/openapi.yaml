@@ -227,7 +227,7 @@ components:
       properties:
         role:
           type: string
-          enum: ["system", "user", "assistant"]
+          enum: ["system", "user", "assistant", "tool"]
           description: The role of the message sender.
           example: "user"
         content:
