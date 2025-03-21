@@ -201,7 +201,7 @@ components:
           items:
             $ref: '#/components/schemas/Message'
           description: List of messages in the chat history, including roles and content.
-          minItems: 1
+          minItems: 0
         format:
           type: string
           enum: ["json"]

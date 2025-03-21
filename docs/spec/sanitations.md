@@ -47,6 +47,14 @@ These changes are done in order to improve the overall usability, and as workaro
 
    - **Reason**: The `tool` role supported by Ollama (for supported models only), but it was missing from the OpenAPI spec. This change ensures that the generated client can handle this role correctly.
 
+5. Change `minItems` in `components\schemas\ChatRequest\properties\messages` to `0`
+
+   - **Original**: The original OpenAPI spec had `minItems` set to `1`.
+
+   - **Updated**: Changed `minItems` to `0`.
+
+   - **Reason**: Ollama API have an option to load the model by setting the `messages` object to an empty array. To add this functionality to the client, API spec was updated to acccept empty arrays.
+
 <!-- 4. Add `done_reason` to `GenerateStreamResponse` object
 
    - **Original**: The original OpenAPI spec did not include `done_reason` in the `GenerateStreamResponse` object.
